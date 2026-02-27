@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>教师管理后台 - 公差配合与测量技术</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            background: #f0f2f5;
+        }
+        .admin-header {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-header h1 {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .admin-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 16px;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .stat-box .num {
+            font-size: 32px;
+            font-weight: 700;
+            color: #f59e0b;
+        }
+        .stat-box .label {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        .class-card {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .class-header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .class-header h3 {
+            font-size: 18px;
+        }
+        .class-stats {
+            display: flex;
+            gap: 16px;
+        }
+        .class-stats span {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .chapter-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .chapter-tab {
+            padding: 8px 16px;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        .chapter-tab.active {
+            background: #2563eb;
+            color: white;
+        }
+        .student-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .student-table th,
+        .student-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .student-table th {
+            background: #f9fafb;
+            font-weight: 600;
+            font-size: 13px;
+            color: #6b7280;
+        }
+        .student-table td {
+            font-size: 14px;
+        }
+        .status-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        .status-tag.submitted {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+        .status-tag.pending {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+        .progress-bar-mini {
+            width: 100px;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar-mini-fill {
+            height: 100%;
+            background: #10b981;
+            border-radius: 4px;
+        }
+        .export-btn {
+            background: white;
+            color: #f59e0b;
+            border: 2px solid #f59e0b;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+        .export-btn:hover {
+            background: #f59e0b;
+            color: white;
+        }
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .filter-bar select {
+            padding: 10px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            min-width: 150px;
+        }
+        .unsubmitted-list {
+            padding: 16px;
+        }
+        .unsubmitted-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #fef3c7;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .unsubmitted-item .name {
+            font-weight: 500;
+        }
+        .unsubmitted-item .chapters {
+            font-size: 13px;
+            color: #92400e;
+        }
+        @media (max-width: 768px) {
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .class-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            .student-table {
+                font-size: 13px;
+            }
+            .student-table th,
+            .student-table td {
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <h1>
+            <i class="fas fa-chalkboard-teacher"></i>
+            教师管理后台
+        </h1>
+        <div>
+            <a href="index.html" class="export-btn">
+                <i class="fas fa-home"></i> 返回课程
+            </a>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="num" id="totalStudents">0</div>
+                <div class="label">总学生数</div>
+            </div>
+            <div class="stat-box">
+                <div class="num" id="totalClasses">6</div>
+                <div class="label">班级数量</div>
+            </div>
+            <div class="stat-box">
+                <div class="num" id="totalSubmissions">0</div>
+                <div class="label">作业提交总数</div>
+            </div>
+            <div class="stat-box">
+                <div class="num" id="avgRate">0%</div>
+                <div class="label">平均提交率</div>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <select id="classFilter" onchange="filterByClass()">
+                <option value="">全部班级</option>
+                <option value="机器人241班">机器人241班</option>
+                <option value="智能242班">智能242班</option>
+                <option value="数控255班">数控255班</option>
+                <option value="数控243班">数控243班</option>
+                <option value="数控256班">数控256班</option>
+                <option value="数控251班">数控251班</option>
+            </select>
+            <select id="chapterFilter" onchange="filterByChapter()">
+                <option value="">全部章节</option>
+            </select>
+            <button class="export-btn" onclick="exportData()">
+                <i class="fas fa-download"></i> 导出数据
+            </button>
+        </div>
+
+        <div id="classCards"></div>
+
+        <div class="class-card">
+            <div class="class-header" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                <h3><i class="fas fa-exclamation-triangle"></i> 未提交作业学生汇总</h3>
+            </div>
+            <div class="unsubmitted-list" id="unsubmittedList">
+                <p style="color: #6b7280; text-align: center; padding: 20px;">加载中...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="data/chapters.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initSupabase();
+            initChapterFilter();
+            loadData();
+        });
+
+        function initChapterFilter() {
+            const select = document.getElementById('chapterFilter');
+            courseChapters.forEach(chapter => {
+                const option = document.createElement('option');
+                option.value = chapter.id;
+                option.textContent = `第${chapter.id}章 ${chapter.title}`;
+                select.appendChild(option);
+            });
+        }
+
+        async function loadData() {
+            const students = await getStudents();
+            const submissions = await getHomeworkSubmissions();
+            
+            document.getElementById('totalStudents').textContent = students.length;
+            document.getElementById('totalSubmissions').textContent = submissions.length;
+            
+            const totalPossible = students.length * courseChapters.length;
+            const avgRate = totalPossible > 0 ? Math.round((submissions.length / totalPossible) * 100) : 0;
+            document.getElementById('avgRate').textContent = avgRate + '%';
+            
+            renderClassCards(students, submissions);
+            renderUnsubmittedList(students, submissions);
+        }
+
+        function renderClassCards(students, submissions) {
+            const container = document.getElementById('classCards');
+            const classes = ["机器人241班", "智能242班", "数控255班", "数控243班", "数控256班", "数控251班"];
+            
+            let html = '';
+            classes.forEach(className => {
+                const classStudents = students.filter(s => s.className === className);
+                const classSubmissions = submissions.filter(s => {
+                    const student = students.find(st => st.id === s.studentId);
+                    return student && student.className === className;
+                });
+                
+                const totalPossible = classStudents.length * courseChapters.length;
+                const rate = totalPossible > 0 ? Math.round((classSubmissions.length / totalPossible) * 100) : 0;
+                
+                html += `
+                    <div class="class-card" data-class="${className}">
+                        <div class="class-header">
+                            <h3><i class="fas fa-users"></i> ${className}</h3>
+                            <div class="class-stats">
+                                <span><i class="fas fa-user"></i> ${classStudents.length}人</span>
+                                <span><i class="fas fa-file-alt"></i> 提交率: ${rate}%</span>
+                            </div>
+                        </div>
+                        <div class="chapter-tabs">
+                            <button class="chapter-tab active" onclick="showChapterStatus(this, '${className}', 'all')">全部</button>
+                            ${courseChapters.map(ch => `
+                                <button class="chapter-tab" onclick="showChapterStatus(this, '${className}', ${ch.id})">
+                                    第${ch.id}章
+                                </button>
+                            `).join('')}
+                        </div>
+                        <div class="student-table-container" id="table_${className.replace(/\s/g, '')}">
+                            ${renderStudentTable(classStudents, submissions, 'all')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function renderStudentTable(students, submissions, chapterId) {
+            if (students.length === 0) {
+                return '<p style="padding: 20px; text-align: center; color: #6b7280;">暂无学生数据</p>';
+            }
+            
+            let html = `
+                <table class="student-table">
+                    <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>学号</th>
+                            <th>学习进度</th>
+                            <th>作业状态</th>
+                            <th>提交时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            students.forEach(student => {
+                const progress = JSON.parse(localStorage.getItem('learning_progress') || '[]')
+                    .filter(p => p.studentId === student.id);
+                const completedChapters = progress.filter(p => p.completed).length;
+                const progressPercent = Math.round((completedChapters / courseChapters.length) * 100);
+                
+                let studentSubmissions = submissions.filter(s => s.studentId === student.id);
+                if (chapterId !== 'all') {
+                    studentSubmissions = studentSubmissions.filter(s => s.chapterId === parseInt(chapterId));
+                }
+                
+                const latestSubmission = studentSubmissions[studentSubmissions.length - 1];
+                const isSubmitted = studentSubmissions.length > 0;
+                
+                html += `
+                    <tr>
+                        <td>${student.name}</td>
+                        <td>${student.studentId || '-'}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div class="progress-bar-mini">
+                                    <div class="progress-bar-mini-fill" style="width: ${progressPercent}%"></div>
+                                </div>
+                                <span>${progressPercent}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-tag ${isSubmitted ? 'submitted' : 'pending'}">
+                                ${isSubmitted ? '已提交' : '未提交'}
+                            </span>
+                        </td>
+                        <td>${latestSubmission ? new Date(latestSubmission.submittedAt).toLocaleString() : '-'}</td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            return html;
+        }
+
+        function showChapterStatus(btn, className, chapterId) {
+            const card = btn.closest('.class-card');
+            card.querySelectorAll('.chapter-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const students = JSON.parse(localStorage.getItem('students') || '[]')
+                .filter(s => s.className === className);
+            const submissions = JSON.parse(localStorage.getItem('homework_submissions') || '[]');
+            
+            const containerId = `table_${className.replace(/\s/g, '')}`;
+            document.getElementById(containerId).innerHTML = renderStudentTable(students, submissions, chapterId);
+        }
+
+        function renderUnsubmittedList(students, submissions) {
+            const container = document.getElementById('unsubmittedList');
+            
+            let unsubmittedData = [];
+            
+            students.forEach(student => {
+                const unsubmittedChapters = [];
+                courseChapters.forEach(chapter => {
+                    const submitted = submissions.find(s => 
+                        s.studentId === student.id && s.chapterId === chapter.id
+                    );
+                    if (!submitted) {
+                        unsubmittedChapters.push(chapter.id);
+                    }
+                });
+                
+                if (unsubmittedChapters.length > 0) {
+                    unsubmittedData.push({
+                        student: student,
+                        chapters: unsubmittedChapters
+                    });
+                }
+            });
+            
+            if (unsubmittedData.length === 0) {
+                container.innerHTML = '<p style="color: #10b981; text-align: center; padding: 20px;"><i class="fas fa-check-circle"></i> 所有学生都已提交作业！</p>';
+                return;
+            }
+            
+            let html = '';
+            unsubmittedData.forEach(item => {
+                html += `
+                    <div class="unsubmitted-item">
+                        <div>
+                            <span class="name">${item.student.name}</span>
+                            <span style="margin-left: 8px; color: #6b7280; font-size: 13px;">${item.student.className}</span>
+                        </div>
+                        <div class="chapters">
+                            未交: 第${item.chapters.join('、')}章
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function filterByClass() {
+            const className = document.getElementById('classFilter').value;
+            const cards = document.querySelectorAll('.class-card[data-class]');
+            
+            cards.forEach(card => {
+                if (!className || card.dataset.class === className) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function filterByChapter() {
+            const chapterId = document.getElementById('chapterFilter').value;
+            const tabs = document.querySelectorAll('.chapter-tab');
+            
+            tabs.forEach(tab => {
+                if (tab.textContent === '全部') {
+                    tab.click();
+                }
+            });
+        }
+
+        function exportData() {
+            const students = JSON.parse(localStorage.getItem('students') || '[]');
+            const submissions = JSON.parse(localStorage.getItem('homework_submissions') || '[]');
+            const progress = JSON.parse(localStorage.getItem('learning_progress') || '[]');
+            
+            let csv = '班级,姓名,学号,学习进度,已交作业数,未交作业数\n';
+            
+            students.forEach(student => {
+                const studentProgress = progress.filter(p => p.studentId === student.id);
+                const completedChapters = studentProgress.filter(p => p.completed).length;
+                const studentSubmissions = submissions.filter(s => s.studentId === student.id);
+                const unsubmittedCount = courseChapters.length - studentSubmissions.length;
+                
+                csv += `${student.className},${student.name},${student.studentId || ''},${completedChapters}/${courseChapters.length},${studentSubmissions.length},${unsubmittedCount}\n`;
+            });
+            
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `学生作业统计_${new Date().toLocaleDateString()}.csv`;
+            link.click();
+        }
+    </script>
+</body>
+</html>

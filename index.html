@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>公差配合与测量技术 - 中职在线课程</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2563eb;
+    --primary-dark: #1d4ed8;
+    --secondary-color: #10b981;
+    --accent-color: #f59e0b;
+    --danger-color: #ef4444;
+    --bg-color: #f3f4f6;
+    --card-bg: #ffffff;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --radius: 12px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    padding: 12px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.logo i {
+    font-size: 24px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-login {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s;
+}
+
+.btn-login:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-name {
+    font-weight: 500;
+}
+
+.user-class {
+    font-size: 12px;
+    opacity: 0.9;
+    background: rgba(255,255,255,0.2);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.btn-logout {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.nav-bar {
+    background: var(--card-bg);
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 52px;
+    z-index: 99;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 16px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.3s;
+    border-radius: 8px;
+    min-width: 60px;
+}
+
+.nav-item i {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.nav-item span {
+    font-size: 12px;
+}
+
+.nav-item.active {
+    color: var(--primary-color);
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.nav-item:hover {
+    color: var(--primary-color);
+}
+
+.main-content {
+    flex: 1;
+    padding: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-banner {
+    background: linear-gradient(135deg, var(--primary-color), #6366f1);
+    color: white;
+    padding: 24px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.welcome-banner h1 {
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.welcome-banner p {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.quick-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    padding: 16px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow);
+}
+
+.stat-card i {
+    font-size: 28px;
+    color: var(--primary-color);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(37, 99, 235, 0.1);
+    border-radius: 10px;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-num {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.course-intro {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+
+.course-intro h2 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-color);
+}
+
+.course-intro p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.chapter-preview {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.chapter-preview h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-color);
+}
+
+.chapter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.chapter-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: var(--bg-color);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-left: 4px solid var(--primary-color);
+}
+
+.chapter-item:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow);
+}
+
+.chapter-num {
+    width: 36px;
+    height: 36px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.chapter-info {
+    flex: 1;
+}
+
+.chapter-title {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.chapter-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.chapter-status {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: var(--secondary-color);
+    color: white;
+}
+
+.chapter-status.pending {
+    background: var(--accent-color);
+}
+
+.chapter-status.not-started {
+    background: var(--text-secondary);
+}
+
+.homework-container {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.homework-container h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-color);
+}
+
+.homework-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+
+.tab-btn {
+    padding: 8px 16px;
+    border: none;
+    background: var(--bg-color);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+    transition: all 0.3s;
+}
+
+.tab-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.homework-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.homework-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: var(--bg-color);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.homework-item:hover {
+    background: #e5e7eb;
+}
+
+.homework-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--accent-color);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+}
+
+.homework-info {
+    flex: 1;
+}
+
+.homework-title {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.homework-meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.homework-action {
+    padding: 8px 16px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.homework-action.submitted {
+    background: var(--secondary-color);
+}
+
+.progress-container {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.progress-container h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-color);
+}
+
+.progress-overview {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.progress-card {
+    background: var(--bg-color);
+    padding: 16px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.progress-card h3 {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.progress-card .value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.progress-bar-container {
+    margin: 20px 0;
+}
+
+.progress-bar-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.progress-bar {
+    height: 12px;
+    background: var(--bg-color);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 6px;
+    transition: width 0.5s ease;
+}
+
+.homework-status {
+    margin-top: 20px;
+}
+
+.homework-status h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+}
+
+.status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: var(--bg-color);
+    border-radius: 8px;
+}
+
+.status-item .chapter-name {
+    font-size: 14px;
+}
+
+.status-item .status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.status-badge.completed {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--secondary-color);
+}
+
+.status-badge.pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--accent-color);
+}
+
+.ai-container {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.ai-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.ai-header h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--primary-color);
+}
+
+.ai-header p {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.ai-functions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.ai-func-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 8px;
+    background: var(--bg-color);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.ai-func-btn i {
+    font-size: 24px;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.ai-func-btn span {
+    font-size: 12px;
+    color: var(--text-primary);
+}
+
+.ai-func-btn:hover {
+    background: rgba(37, 99, 235, 0.1);
+    transform: translateY(-2px);
+}
+
+.ai-chat {
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.chat-messages {
+    height: 300px;
+    overflow-y: auto;
+    padding: 16px;
+    background: var(--bg-color);
+}
+
+.message {
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.message.user {
+    align-items: flex-end;
+}
+
+.message.assistant {
+    align-items: flex-start;
+}
+
+.message-content {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.message.user .message-content {
+    background: var(--primary-color);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.message.assistant .message-content {
+    background: white;
+    color: var(--text-primary);
+    border-bottom-left-radius: 4px;
+    box-shadow: var(--shadow);
+}
+
+.chat-input-area {
+    display: flex;
+    padding: 12px;
+    background: white;
+    border-top: 1px solid var(--border-color);
+}
+
+.chat-input-area input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    font-size: 14px;
+    outline: none;
+}
+
+.chat-input-area input:focus {
+    border-color: var(--primary-color);
+}
+
+.chat-input-area button {
+    width: 44px;
+    height: 44px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    margin-left: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.chat-input-area button:hover {
+    background: var(--primary-dark);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalIn 0.3s ease;
+}
+
+.modal-content.modal-large {
+    max-width: 600px;
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 {
+    font-size: 18px;
+}
+
+.close-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--bg-color);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--primary-color);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 20px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.content-block {
+    background: var(--bg-color);
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.content-block h4 {
+    font-size: 15px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.content-block p,
+.content-block li {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.content-block ul {
+    padding-left: 20px;
+}
+
+.example-box {
+    background: rgba(37, 99, 235, 0.05);
+    border-left: 4px solid var(--primary-color);
+    padding: 16px;
+    margin: 12px 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.example-box h5 {
+    font-size: 14px;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.practice-section {
+    margin-top: 20px;
+}
+
+.question-item {
+    background: white;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.question-item .question-text {
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.question-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--bg-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.option-item:hover {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.option-item.selected {
+    background: rgba(37, 99, 235, 0.2);
+    border: 1px solid var(--primary-color);
+}
+
+.option-item input {
+    margin-right: 10px;
+}
+
+.homework-question {
+    background: white;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.homework-question .q-num {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.homework-question .q-text {
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.homework-question textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 16px;
+}
+
+.submit-btn:hover {
+    background: #059669;
+}
+
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+}
+
+.empty-state i {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    .header-content {
+        padding: 0 20px;
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+    .welcome-banner {
+        padding: 40px;
+    }
+
+    .welcome-banner h1 {
+        font-size: 28px;
+    }
+
+    .quick-stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .ai-functions {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .chat-messages {
+        height: 400px;
+    }
+}
+
+@media (max-width: 360px) {
+    .logo span {
+        font-size: 14px;
+    }
+
+    .ai-functions {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-cogs"></i>
+                    <span>公差配合与测量技术</span>
+                </div>
+                <div class="user-info" id="userInfo">
+                    <button class="btn-login" id="loginBtn" onclick="showLoginModal()">
+                        <i class="fas fa-user"></i> 登录
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <nav class="nav-bar">
+            <div class="nav-item active" data-page="home" onclick="switchPage('home')">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </div>
+            <div class="nav-item" data-page="chapters" onclick="switchPage('chapters')">
+                <i class="fas fa-book"></i>
+                <span>课程</span>
+            </div>
+            <div class="nav-item" data-page="homework" onclick="switchPage('homework')">
+                <i class="fas fa-tasks"></i>
+                <span>作业</span>
+            </div>
+            <div class="nav-item" data-page="progress" onclick="switchPage('progress')">
+                <i class="fas fa-chart-line"></i>
+                <span>学情</span>
+            </div>
+            <div class="nav-item" data-page="ai" onclick="switchPage('ai')">
+                <i class="fas fa-robot"></i>
+                <span>AI助教</span>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div id="homePage" class="page active">
+                <div class="welcome-banner">
+                    <h1>欢迎学习《公差配合与测量技术》</h1>
+                    <p>中等职业教育核心课程 | AI赋能智慧学习</p>
+                </div>
+                
+                <div class="quick-stats" id="quickStats">
+                    <div class="stat-card">
+                        <i class="fas fa-book-open"></i>
+                        <div class="stat-info">
+                            <span class="stat-num" id="chapterCount">9</span>
+                            <span class="stat-label">课程章节</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="stat-info">
+                            <span class="stat-num" id="completedCount">0</span>
+                            <span class="stat-label">已完成</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-file-alt"></i>
+                        <div class="stat-info">
+                            <span class="stat-num" id="homeworkCount">0</span>
+                            <span class="stat-label">待交作业</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-star"></i>
+                        <div class="stat-info">
+                            <span class="stat-num" id="scoreCount">--</span>
+                            <span class="stat-label">综合成绩</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-intro">
+                    <h2><i class="fas fa-info-circle"></i> 课程简介</h2>
+                    <p>《公差配合与测量技术》是机械类专业的重要技术基础课程，主要研究机械零件几何精度的设计、标注与检测。本课程培养学生掌握互换性原理、公差标准应用、测量技术等核心技能，为从事机械设计、制造、检测等工作奠定基础。</p>
+                </div>
+
+                <div class="chapter-preview">
+                    <h2><i class="fas fa-list"></i> 课程目录</h2>
+                    <div class="chapter-list" id="chapterList"></div>
+                </div>
+            </div>
+
+            <div id="chaptersPage" class="page">
+                <div class="chapter-detail" id="chapterDetail"></div>
+            </div>
+
+            <div id="homeworkPage" class="page">
+                <div class="homework-container">
+                    <h2><i class="fas fa-tasks"></i> 作业中心</h2>
+                    <div class="homework-tabs">
+                        <button class="tab-btn active" onclick="switchHomeworkTab('pending')">待完成</button>
+                        <button class="tab-btn" onclick="switchHomeworkTab('submitted')">已提交</button>
+                        <button class="tab-btn" onclick="switchHomeworkTab('all')">全部作业</button>
+                    </div>
+                    <div class="homework-list" id="homeworkList"></div>
+                </div>
+            </div>
+
+            <div id="progressPage" class="page">
+                <div class="progress-container">
+                    <h2><i class="fas fa-chart-line"></i> 学情分析</h2>
+                    <div class="progress-overview" id="progressOverview"></div>
+                    <div class="learning-chart" id="learningChart"></div>
+                    <div class="homework-status" id="homeworkStatus"></div>
+                </div>
+            </div>
+
+            <div id="aiPage" class="page">
+                <div class="ai-container">
+                    <div class="ai-header">
+                        <h2><i class="fas fa-robot"></i> AI智能助教</h2>
+                        <p>基于课程知识库的智能问答系统</p>
+                    </div>
+                    <div class="ai-functions">
+                        <button class="ai-func-btn" onclick="aiFunction('qa')">
+                            <i class="fas fa-question-circle"></i>
+                            <span>智能问答</span>
+                        </button>
+                        <button class="ai-func-btn" onclick="aiFunction('summary')">
+                            <i class="fas fa-file-alt"></i>
+                            <span>智能总结</span>
+                        </button>
+                        <button class="ai-func-btn" onclick="aiFunction('keypoints')">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>章节要点</span>
+                        </button>
+                        <button class="ai-func-btn" onclick="aiFunction('analysis')">
+                            <i class="fas fa-user-graduate"></i>
+                            <span>学情分析</span>
+                        </button>
+                        <button class="ai-func-btn" onclick="aiFunction('cases')">
+                            <i class="fas fa-industry"></i>
+                            <span>产教案例</span>
+                        </button>
+                        <button class="ai-func-btn" onclick="aiFunction('progress')">
+                            <i class="fas fa-route"></i>
+                            <span>学习进度</span>
+                        </button>
+                    </div>
+                    <div class="ai-chat" id="aiChat">
+                        <div class="chat-messages" id="chatMessages"></div>
+                        <div class="chat-input-area">
+                            <input type="text" id="chatInput" placeholder="输入您的问题..." onkeypress="handleChatKeypress(event)">
+                            <button onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="modal" id="loginModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>学生登录</h3>
+                    <button class="close-btn" onclick="closeLoginModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>姓名</label>
+                        <input type="text" id="studentName" placeholder="请输入姓名">
+                    </div>
+                    <div class="form-group">
+                        <label>班级</label>
+                        <select id="studentClass">
+                            <option value="">请选择班级</option>
+                            <option value="机器人241班">机器人241班</option>
+                            <option value="智能242班">智能242班</option>
+                            <option value="数控255班">数控255班</option>
+                            <option value="数控243班">数控243班</option>
+                            <option value="数控256班">数控256班</option>
+                            <option value="数控251班">数控251班</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>学号（可选）</label>
+                        <input type="text" id="studentId" placeholder="请输入学号">
+                    </div>
+                    <button class="btn-primary" onclick="studentLogin()">登录</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="homeworkModal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h3 id="homeworkTitle">作业</h3>
+                    <button class="close-btn" onclick="closeHomeworkModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="homeworkContent"></div>
+            </div>
+        </div>
+
+        <div class="modal" id="chapterModal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h3 id="chapterModalTitle">章节内容</h3>
+                    <button class="close-btn" onclick="closeChapterModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="chapterModalContent"></div>
+            </div>
+        </div>
+    </div>
+
+<script>
+const courseChapters = [
+    {
+        id: 1,
+        title: "绪论",
+        description: "课程性质、互换性概念、加工误差与公差",
+        content: {
+            mainContent: `<h4>一、课程的性质与任务</h4><p>《公差配合与测量技术》是机械类专业的重要技术基础课程，主要研究机械零件几何精度的设计、标注与检测。本课程培养学生掌握互换性原理、公差标准应用、测量技术等核心技能。</p><h4>二、互换性的概念</h4><p><strong>互换性</strong>是指在同一规格的一批零件或部件中，任取其一，不需任何挑选或附加修配就能装在机器上，达到规定的功能要求。</p><ul><li><strong>完全互换</strong>：不需任何辅助加工即可装配使用</li><li><strong>不完全互换</strong>：允许适当的选择或修配</li></ul><h4>三、加工误差与公差</h4><p>加工误差是指零件加工后的实际几何参数与理想几何参数的偏差。公差是允许零件几何参数的变动量。</p><p>公差与误差的关系：公差是限制误差的，误差必须控制在公差范围内。</p><h4>四、标准化与优先数系</h4><p>标准化是指为适应科学发展和合理组织生产的需要，在产品质量、品种规格、零部件通用等方面规定统一的技术标准。</p>`,
+            keyPoints: [
+                { title: "重点一：互换性的概念及应用", content: "互换性是现代机械制造的基本原则，是实现专业化生产、提高生产效率的重要保证。理解完全互换与不完全互换的区别及应用场合。" },
+                { title: "重点二：加工误差与公差的关系", content: "加工误差是不可避免的，公差是设计者给定的允许误差范围。零件的加工误差必须控制在公差范围内才能满足使用要求。" }
+            ],
+            difficulties: [
+                { title: "难点一：互换性的分类及应用", content: "理解完全互换与不完全互换的概念区别，掌握在不同生产条件下的应用选择。大批量生产采用完全互换，单件小批量可采用不完全互换。" },
+                { title: "难点二：优先数系的选用", content: "掌握优先数系的构成规律，能够根据产品系列化要求选择合适的优先数系列。" }
+            ],
+            examples: [
+                { title: "例题1：互换性的应用", question: "某汽车发动机需要更换活塞，为什么可以直接购买同型号活塞进行更换？", answer: "因为活塞具有互换性。同一型号的活塞按照统一标准生产，尺寸精度控制在公差范围内，因此可以直接更换使用，无需修配。" },
+                { title: "例题2：公差与误差", question: "某轴的公差为0.02mm，加工后测量误差为0.018mm，该零件是否合格？", answer: "合格。因为加工误差(0.018mm)小于公差(0.02mm)，零件在允许的误差范围内，满足设计要求。" }
+            ],
+            industryCases: [
+                { title: "产教融合案例：汽车零部件的互换性", content: "某汽车制造企业采用互换性原则生产发动机零部件。曲轴、连杆、活塞等关键零件均采用标准化设计，实现全球供应链采购。学生参观企业生产线，了解互换性在实际生产中的应用。" }
+            ]
+        }
+    },
+    {
+        id: 2,
+        title: "光滑圆柱体结合的极限与配合",
+        description: "孔轴定义、极限尺寸、配合种类",
+        content: {
+            mainContent: `<h4>一、孔与轴的定义</h4><p><strong>孔</strong>：主要指工件的圆柱形内表面，也包括非圆柱形内表面（由两平行平面或切平面形成的包容面）。</p><p><strong>轴</strong>：主要指工件的圆柱形外表面，也包括非圆柱形外表面（由两平行平面或切平面形成的被包容面）。</p><h4>二、有关尺寸的术语</h4><ul><li><strong>基本尺寸</strong>：设计给定的尺寸</li><li><strong>实际尺寸</strong>：通过测量获得的尺寸</li><li><strong>极限尺寸</strong>：允许尺寸变化的两个界限值</li></ul><h4>三、偏差与公差</h4><p><strong>尺寸偏差</strong> = 某一尺寸 - 基本尺寸</p><p><strong>尺寸公差(T)</strong> = 最大极限尺寸 - 最小极限尺寸</p><h4>四、配合的种类</h4><ul><li><strong>间隙配合</strong>：孔的公差带在轴的公差带之上</li><li><strong>过盈配合</strong>：孔的公差带在轴的公差带之下</li><li><strong>过渡配合</strong>：孔与轴的公差带相互交叠</li></ul>`,
+            keyPoints: [
+                { title: "重点一：孔与轴的判断", content: "判断孔与轴的关键是看其表面是包容面还是被包容面。包容面为孔，被包容面为轴。" },
+                { title: "重点二：公差与配合的计算", content: "掌握公差、偏差的计算方法，能够根据孔轴的极限尺寸计算配合间隙或过盈。" }
+            ],
+            difficulties: [
+                { title: "难点一：配合性质的判断", content: "根据孔轴公差带的位置关系判断配合性质。" },
+                { title: "难点二：公差带图的绘制与分析", content: "能够正确绘制公差带图，分析配合性质。" }
+            ],
+            examples: [
+                { title: "例题1：尺寸公差计算", question: "某轴基本尺寸为φ50mm，最大极限尺寸为φ50.025mm，最小极限尺寸为φ49.990mm，求轴的公差。", answer: "公差T = 50.025 - 49.990 = 0.035mm" }
+            ],
+            industryCases: [
+                { title: "产教融合案例：轴承与轴的配合选择", content: "某数控机床厂生产主轴部件，需要选择轴承与主轴的配合。学生参与实际测量，了解配合选择对设备性能的影响。" }
+            ]
+        }
+    },
+    {
+        id: 3,
+        title: "测量技术基础",
+        description: "测量方法、测量器具、测量误差",
+        content: {
+            mainContent: `<h4>一、测量的基本概念</h4><p><strong>测量</strong>：为确定被测量的量值而进行的实验过程。</p><h4>二、测量方法分类</h4><ul><li><strong>直接测量</strong>：直接由计量器具读出被测量的量值</li><li><strong>间接测量</strong>：通过测量与被测量有函数关系的其他量计算得到</li></ul><h4>三、常用测量器具</h4><ul><li><strong>游标卡尺</strong>：测量精度0.02mm、0.05mm</li><li><strong>千分尺</strong>：测量精度0.01mm</li><li><strong>百分表</strong>：测量精度0.01mm</li></ul><h4>四、测量误差</h4><ul><li><strong>系统误差</strong>：有规律的误差，可修正</li><li><strong>随机误差</strong>：无规律的误差</li><li><strong>粗大误差</strong>：明显偏离正常值的误差</li></ul>`,
+            keyPoints: [
+                { title: "重点一：测量方法的选择", content: "根据被测对象的精度要求、形状特点选择合适的测量方法和器具。" },
+                { title: "重点二：测量器具的使用", content: "掌握游标卡尺、千分尺等常用测量器具的正确使用方法。" }
+            ],
+            difficulties: [
+                { title: "难点一：测量误差的分析", content: "理解系统误差、随机误差、粗大误差的特点。" }
+            ],
+            examples: [
+                { title: "例题1：游标卡尺读数", question: "使用精度为0.02mm的游标卡尺测量，主尺读数为23mm，游标第8格与主尺对齐，求测量值。", answer: "测量值 = 23 + 8×0.02 = 23.16mm" }
+            ],
+            industryCases: [
+                { title: "产教融合案例：车间测量实训", content: "学生在实训车间进行实际测量操作，使用游标卡尺、千分尺测量轴类零件。" }
+            ]
+        }
+    },
+    {
+        id: 4,
+        title: "几何公差",
+        description: "形状公差、方向公差、位置公差、跳动公差",
+        content: {
+            mainContent: `<h4>一、几何公差的分类</h4><ul><li><strong>形状公差</strong>：直线度、平面度、圆度、圆柱度</li><li><strong>方向公差</strong>：平行度、垂直度、倾斜度</li><li><strong>位置公差</strong>：同轴度、对称度、位置度</li><li><strong>跳动公差</strong>：圆跳动、全跳动</li></ul><h4>二、几何公差带</h4><p>几何公差带是限制实际要素变动的区域，由形状、大小、方向、位置四个要素确定。</p>`,
+            keyPoints: [
+                { title: "重点一：几何公差符号及标注", content: "掌握各种几何公差项目的符号、标注方法。" },
+                { title: "重点二：公差带的概念", content: "理解公差带的四要素（形状、大小、方向、位置）。" }
+            ],
+            difficulties: [
+                { title: "难点一：公差原则的应用", content: "理解独立原则、包容要求、最大实体要求等。" }
+            ],
+            examples: [
+                { title: "例题1：直线度公差", question: "某轴的轴线直线度公差为φ0.02mm，说明其含义。", answer: "表示轴的实际轴线必须位于直径为φ0.02mm的圆柱面公差带内。" }
+            ],
+            industryCases: [
+                { title: "产教融合案例：机床导轨几何精度检测", content: "学生参与机床导轨的直线度、平行度等几何精度检测。" }
+            ]
+        }
+    },
+    {
+        id: 5,
+        title: "表面粗糙度",
+        description: "表面粗糙度参数、标注与检测",
+        content: {
+            mainContent: `<h4>一、表面粗糙度的概念</h4><p><strong>表面粗糙度</strong>：加工表面上具有的较小间距和微小峰谷的微观几何形状误差。</p><h4>二、表面粗糙度评定参数</h4><ul><li><strong>Ra（轮廓算术平均偏差）</strong>：最常用参数</li><li><strong>Rz（轮廓最大高度）</strong></li></ul><h4>三、表面粗糙度的检测</h4><ul><li><strong>比较法</strong>：与粗糙度样块比较</li><li><strong>光切法</strong>：使用光切显微镜</li><li><strong>针描法</strong>：使用电动轮廓仪</li></ul>`,
+            keyPoints: [
+                { title: "重点一：Ra参数的含义与应用", content: "Ra是最常用的表面粗糙度评定参数，Ra值越小，表面越光滑。" },
+                { title: "重点二：表面粗糙度的标注方法", content: "掌握表面粗糙度代号的标注方法。" }
+            ],
+            difficulties: [
+                { title: "难点一：表面粗糙度的合理选择", content: "根据零件工作条件选择合适的表面粗糙度参数值。" }
+            ],
+            examples: [
+                { title: "例题1：表面粗糙度选择", question: "某轴与孔配合，轴的尺寸公差等级为IT6，应选择多大的Ra值？", answer: "IT6属于较高精度等级，轴表面Ra值可选择0.8~1.6μm。" }
+            ],
+            industryCases: [
+                { title: "产教融合案例：发动机缸体表面质量检测", content: "学生使用粗糙度仪检测发动机缸体内壁表面粗糙度。" }
+            ]
+        }
+    },
+    {
+        id: 6,
+        title: "滚动轴承的公差与配合",
+        description: "滚动轴承精度等级、配合选择",
+        content: {
+            mainContent: `<h4>一、滚动轴承的结构与分类</h4><p>滚动轴承由内圈、外圈、滚动体和保持架组成。</p><h4>二、滚动轴承的精度等级</h4><p>向心轴承精度等级（由低到高）：P0、P6、P5、P4、P2</p><h4>三、滚动轴承的公差特点</h4><ul><li>轴承内圈与轴配合采用基孔制，但内圈内径公差带位于零线下方</li><li>轴承外圈与外壳孔配合采用基轴制</li></ul>`,
+            keyPoints: [
+                { title: "重点一：轴承公差带的特点", content: "轴承内圈公差带位于零线下方，使配合偏紧。" },
+                { title: "重点二：配合选择原则", content: "根据载荷类型、大小、工作条件选择合适的配合。" }
+            ],
+            difficulties: [
+                { title: "难点一：载荷类型的判断", content: "理解旋转负荷、静止负荷、摆动负荷的概念。" }
+            ],
+            examples: [
+                { title: "例题1：轴承配合选择", question: "某减速器输出轴采用6208轴承，内圈承受旋转负荷，选择配合。", answer: "内圈承受旋转负荷，轴公差带可选k5或m5；外圈静止，外壳孔公差带可选H7或J7。" }
+            ],
+            industryCases: [
+                { title: "产教融合案例：电机轴承装配", content: "学生参与电机轴承装配过程，了解轴承配合选择对电机运行性能的影响。" }
+            ]
+        }
+    },
+    {
+        id: 7,
+        title: "键与花键的公差与配合",
+        description: "平键、花键联结的公差配合",
+        content: {
+            mainContent: `<h4>一、键联结的类型</h4><ul><li><strong>平键</strong>：普通平键、导向平键</li><li><strong>半圆键</strong>：用于锥形轴端</li><li><strong>楔键</strong>：用于低速、轻载场合</li></ul><h4>二、平键联结的公差与配合</h4><p>平键联结通过键宽b实现配合。</p><h4>三、花键联结的特点</h4><ul><li>承载能力强</li><li>导向性好</li><li>对中性好</li></ul>`,
+            keyPoints: [
+                { title: "重点一：平键配合的选择", content: "根据使用要求选择合适的配合种类。" },
+                { title: "重点二：花键定心方式", content: "小径定心精度最高，是现代花键联结的主要定心方式。" }
+            ],
+            difficulties: [
+                { title: "难点一：键槽对称度的测量", content: "掌握键槽对称度的测量方法。" }
+            ],
+            examples: [
+                { title: "例题1：平键尺寸选择", question: "轴径φ50mm，选择平键尺寸及配合。", answer: "查表得：键宽b=14mm，键高h=9mm。一般传动采用正常联结。" }
+            ],
+            industryCases: [
+                { title: "产教融合案例：变速箱花键轴加工", content: "学生参观花键加工过程，了解花键在汽车传动系统中的作用。" }
+            ]
+        }
+    },
+    {
+        id: 8,
+        title: "螺纹的公差与配合",
+        description: "普通螺纹公差、梯形螺纹公差",
+        content: {
+            mainContent: `<h4>一、螺纹的基本参数</h4><ul><li><strong>大径(d/D)</strong>：与外螺纹牙顶或内螺纹牙底相切的圆柱直径</li><li><strong>小径(d₁/D₁)</strong>：与外螺纹牙底或内螺纹牙顶相切的圆柱直径</li><li><strong>中径(d₂/D₂)</strong>：母线通过牙型上沟槽和凸起宽度相等处的圆柱直径</li><li><strong>螺距(P)</strong>：相邻两牙在中径线上对应两点间的轴向距离</li></ul><h4>二、普通螺纹公差带</h4><p>螺纹公差带由公差等级和基本偏差组成。</p>`,
+            keyPoints: [
+                { title: "重点一：螺纹中径的概念", content: "中径是螺纹的重要参数，影响螺纹的配合质量。" },
+                { title: "重点二：螺纹公差带的选用", content: "一般用途内螺纹用6H，外螺纹用6g。" }
+            ],
+            difficulties: [
+                { title: "难点一：作用中径的计算", content: "理解作用中径的概念，考虑螺距误差和牙型半角误差的影响。" }
+            ],
+            examples: [
+                { title: "例题1：螺纹标记识读", question: "说明螺纹标记M20×2-5g6g-L的含义。", answer: "M：普通螺纹；20：公称直径；2：螺距；5g：中径公差带；6g：顶径公差带；L：长旋合长度。" }
+            ],
+            industryCases: [
+                { title: "产教融合案例：螺纹检测实训", content: "学生学习螺纹检测方法，使用螺纹千分尺测量中径。" }
+            ]
+        }
+    },
+    {
+        id: 9,
+        title: "圆柱齿轮公差",
+        description: "齿轮精度等级、检验项目",
+        content: {
+            mainContent: `<h4>一、齿轮传动的使用要求</h4><ul><li><strong>传递运动的准确性</strong>：限制一转范围内传动比的变动</li><li><strong>传动的平稳性</strong>：限制瞬时传动比的变动</li><li><strong>载荷分布的均匀性</strong>：保证齿面接触良好</li><li><strong>适当的齿侧间隙</strong>：保证正常润滑</li></ul><h4>二、齿轮精度等级</h4><p>GB/T 10095规定齿轮精度分为13个等级，0级最高，12级最低。</p><h4>三、齿轮检验项目</h4><ul><li><strong>齿距累积总偏差Fp</strong>：评定运动准确性</li><li><strong>齿廓总偏差Fα</strong>：评定传动平稳性</li><li><strong>螺旋线总偏差Fβ</strong>：评定载荷分布均匀性</li></ul>`,
+            keyPoints: [
+                { title: "重点一：齿轮精度等级的选择", content: "根据齿轮的用途、圆周速度、传递功率等因素选择精度等级。" },
+                { title: "重点二：齿轮检验组的选用", content: "根据精度等级和生产批量选择合适的检验项目组合。" }
+            ],
+            difficulties: [
+                { title: "难点一：齿轮各项偏差的含义", content: "理解各项偏差对齿轮传动性能的影响。" }
+            ],
+            examples: [
+                { title: "例题1：齿轮精度标注", question: "说明齿轮精度标注7-6-6 GB/T 10095的含义。", answer: "第1位数字7：运动精度等级；第2位数字6：平稳性精度等级；第3位数字6：接触精度等级。" }
+            ],
+            industryCases: [
+                { title: "产教融合案例：齿轮加工与检测", content: "学生参观齿轮加工车间，学习齿轮精度检测方法。" }
+            ]
+        }
+    }
+];
+
+const chapterQuestions = {
+    1: {
+        practice: [
+            { type: "choice", question: "互换性是指在同一规格的一批零件中，任取其一，不需任何（  ）就能装在机器上。", options: ["A. 测量", "B. 挑选或附加修配", "C. 加工", "D. 检验"], answer: "B" },
+            { type: "choice", question: "下列哪种情况属于完全互换？（  ）", options: ["A. 需要修配才能装配", "B. 需要选择才能装配", "C. 直接装配即可使用", "D. 需要调整才能使用"], answer: "C" },
+            { type: "choice", question: "加工误差与公差的关系是（  ）。", options: ["A. 误差必须控制在公差范围内", "B. 公差必须小于误差", "C. 误差等于公差", "D. 两者无关"], answer: "A" }
+        ],
+        homework: [
+            { question: "什么是互换性？互换性在机械制造中有何重要意义？" },
+            { question: "简述完全互换与不完全互换的区别及各自的应用场合。" },
+            { question: "什么是加工误差？什么是公差？两者有何关系？" },
+            { question: "标准化的意义是什么？列举几个常见的标准件。" },
+            { question: "什么是优先数系？优先数系有哪些系列？" }
+        ]
+    },
+    2: {
+        practice: [
+            { type: "choice", question: "下列属于孔的特征是（  ）。", options: ["A. 圆柱形外表面", "B. 由两平行平面形成的被包容面", "C. 由两平行平面形成的包容面", "D. 键的两侧面"], answer: "C" },
+            { type: "choice", question: "孔公差带在轴公差带上方，这种配合是（  ）。", options: ["A. 间隙配合", "B. 过盈配合", "C. 过渡配合", "D. 无法确定"], answer: "A" }
+        ],
+        homework: [
+            { question: "什么是孔？什么是轴？如何判断？" },
+            { question: "什么是配合？配合分为哪几类？" },
+            { question: "什么是基孔制？什么是基轴制？" }
+        ]
+    },
+    3: {
+        practice: [
+            { type: "choice", question: "下列测量方法中属于直接测量的是（  ）。", options: ["A. 用游标卡尺测量长度", "B. 通过测量直径计算圆面积", "C. 用三针法测量螺纹中径", "D. 通过测量角度计算高度"], answer: "A" }
+        ],
+        homework: [
+            { question: "什么是测量？测量过程包括哪些要素？" },
+            { question: "简述游标卡尺的读数方法。" }
+        ]
+    },
+    4: {
+        practice: [
+            { type: "choice", question: "下列属于形状公差的是（  ）。", options: ["A. 平行度", "B. 垂直度", "C. 圆度", "D. 同轴度"], answer: "C" }
+        ],
+        homework: [
+            { question: "什么是几何公差？几何公差分为哪几类？" },
+            { question: "列举形状公差的项目名称和符号。" }
+        ]
+    },
+    5: {
+        practice: [
+            { type: "choice", question: "表面粗糙度是指加工表面上具有的（  ）。", options: ["A. 宏观几何形状误差", "B. 微观几何形状误差", "C. 波度误差", "D. 位置误差"], answer: "B" }
+        ],
+        homework: [
+            { question: "什么是表面粗糙度？对零件性能有什么影响？" },
+            { question: "说明Ra参数的含义。" }
+        ]
+    },
+    6: {
+        practice: [
+            { type: "choice", question: "滚动轴承的精度等级中，最高精度等级是（  ）。", options: ["A. P0", "B. P6", "C. P2", "D. P4"], answer: "C" }
+        ],
+        homework: [
+            { question: "滚动轴承的精度等级有哪些？" },
+            { question: "为什么滚动轴承内圈公差带位于零线下方？" }
+        ]
+    },
+    7: {
+        practice: [
+            { type: "choice", question: "普通平键联结的主要配合尺寸是（  ）。", options: ["A. 键高", "B. 键长", "C. 键宽", "D. 键槽深"], answer: "C" }
+        ],
+        homework: [
+            { question: "键联结有哪些类型？各有什么特点？" },
+            { question: "花键联结有什么优点？" }
+        ]
+    },
+    8: {
+        practice: [
+            { type: "choice", question: "普通螺纹的公称直径是指（  ）。", options: ["A. 大径", "B. 小径", "C. 中径", "D. 螺距"], answer: "A" }
+        ],
+        homework: [
+            { question: "螺纹的基本参数有哪些？" },
+            { question: "为什么螺纹中径是影响配合性质的主要参数？" }
+        ]
+    },
+    9: {
+        practice: [
+            { type: "choice", question: "齿轮传动的使用要求中，保证传动比恒定的是（  ）。", options: ["A. 运动准确性", "B. 传动平稳性", "C. 载荷分布均匀性", "D. 齿侧间隙"], answer: "B" }
+        ],
+        homework: [
+            { question: "齿轮传动的使用要求有哪些？" },
+            { question: "齿轮精度等级如何划分？" }
+        ]
+    }
+};
+
+const aiKnowledgeBase = {
+    "互换性": { definition: "互换性是指在同一规格的一批零件或部件中，任取其一，不需任何挑选或附加修配就能装在机器上，达到规定的功能要求。", types: ["完全互换", "不完全互换"], application: "互换性是现代机械制造的基本原则，广泛应用于汽车、机床、家电等产品的批量生产中。" },
+    "公差": { definition: "公差是允许零件几何参数的变动量，是设计者给定的允许误差范围。", types: ["尺寸公差", "形状公差", "位置公差"], application: "公差用于控制加工误差，保证零件的互换性和使用性能。" },
+    "配合": { definition: "配合是指基本尺寸相同的、相互结合的孔和轴公差带之间的关系。", types: ["间隙配合", "过盈配合", "过渡配合"], application: "配合的选择直接影响机器的工作性能、使用寿命和制造成本。" }
+};
+
+const SUPABASE_URL = 'https://iokcymqhwltnarugzomb.supabase.co';
+const SUPABASE_ANON_KEY = '735p9NQqhKdm70tK';
+let supabaseClient = null;
+let currentStudent = null;
+let currentPage = 'home';
+let currentChapterId = null;
+let currentHomeworkTab = 'pending';
+
+function initSupabase() {
+    if (typeof window.supabase !== 'undefined') {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log('Supabase initialized');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initSupabase();
+    loadStudentFromStorage();
+    renderChapterList();
+    updateUI();
+});
+
+function loadStudentFromStorage() {
+    const savedStudent = localStorage.getItem('currentStudent');
+    if (savedStudent) {
+        currentStudent = JSON.parse(savedStudent);
+        updateUserInfo();
+    }
+}
+
+function saveCurrentStudent() {
+    if (currentStudent) {
+        localStorage.setItem('currentStudent', JSON.stringify(currentStudent));
+    }
+}
+
+function getCurrentStudent() {
+    return currentStudent;
+}
+
+function showLoginModal() {
+    document.getElementById('loginModal').classList.add('active');
+}
+
+function closeLoginModal() {
+    document.getElementById('loginModal').classList.remove('active');
+}
+
+function studentLogin() {
+    const name = document.getElementById('studentName').value.trim();
+    const className = document.getElementById('studentClass').value;
+    const studentId = document.getElementById('studentId').value.trim();
+    
+    if (!name) { alert('请输入姓名'); return; }
+    if (!className) { alert('请选择班级'); return; }
+    
+    currentStudent = {
+        id: `${className}_${name}_${Date.now()}`,
+        name: name,
+        className: className,
+        studentId: studentId || '',
+        createdAt: new Date().toISOString()
+    };
+    
+    saveCurrentStudent();
+    updateUserInfo();
+    closeLoginModal();
+    updateUI();
+    alert(`欢迎 ${name}！你已成功加入 ${className}`);
+}
+
+function updateUserInfo() {
+    const userInfo = document.getElementById('userInfo');
+    if (currentStudent) {
+        userInfo.innerHTML = `<div class="user-profile"><span class="user-name">${currentStudent.name}</span><span class="user-class">${currentStudent.className}</span><button class="btn-logout" onclick="logout()">退出</button></div>`;
+    } else {
+        userInfo.innerHTML = `<button class="btn-login" onclick="showLoginModal()"><i class="fas fa-user"></i> 登录</button>`;
+    }
+}
+
+function logout() {
+    if (confirm('确定要退出登录吗？')) {
+        currentStudent = null;
+        localStorage.removeItem('currentStudent');
+        updateUserInfo();
+        updateUI();
+    }
+}
+
+function switchPage(pageName) {
+    currentPage = pageName;
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.page === pageName) item.classList.add('active');
+    });
+    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+    document.getElementById(pageName + 'Page').classList.add('active');
+    
+    if (pageName === 'chapters') renderChapterDetail();
+    else if (pageName === 'homework') renderHomeworkList();
+    else if (pageName === 'progress') renderProgressPage();
+}
+
+function renderChapterList() {
+    const container = document.getElementById('chapterList');
+    if (!container) return;
+    
+    let html = '';
+    courseChapters.forEach(chapter => {
+        const status = getChapterStatus(chapter.id);
+        html += `<div class="chapter-item" onclick="openChapter(${chapter.id})">
+            <div class="chapter-num">${chapter.id}</div>
+            <div class="chapter-info">
+                <div class="chapter-title">${chapter.title}</div>
+                <div class="chapter-desc">${chapter.description}</div>
+            </div>
+            <span class="chapter-status ${status.class}">${status.text}</span>
+        </div>`;
+    });
+    container.innerHTML = html;
+}
+
+function getChapterStatus(chapterId) {
+    if (!currentStudent) return { text: '未开始', class: 'not-started' };
+    const progress = JSON.parse(localStorage.getItem('learning_progress') || '[]');
+    const chapterProgress = progress.find(p => p.studentId === currentStudent.id && p.chapterId === chapterId);
+    if (chapterProgress?.completed) return { text: '已完成', class: '' };
+    else if (chapterProgress?.progress > 0) return { text: '学习中', class: 'pending' };
+    return { text: '未开始', class: 'not-started' };
+}
+
+function openChapter(chapterId) {
+    currentChapterId = chapterId;
+    const chapter = courseChapters.find(c => c.id === chapterId);
+    if (!chapter) return;
+    
+    document.getElementById('chapterModalTitle').textContent = `第${chapter.id}章 ${chapter.title}`;
+    
+    let content = `<div class="chapter-content">
+        <div class="section-title">📚 主题内容</div>
+        <div class="content-block">${chapter.content.mainContent}</div>
+        
+        <div class="section-title">🎯 重点难点突破</div>
+        <div class="content-block">
+            <h4>重点内容</h4>
+            ${chapter.content.keyPoints.map(p => `<p><strong>${p.title}</strong>：${p.content}</p>`).join('')}
+            <h4 style="margin-top: 16px;">难点突破</h4>
+            ${chapter.content.difficulties.map(d => `<p><strong>${d.title}</strong>：${d.content}</p>`).join('')}
+        </div>
+        
+        <div class="section-title">📝 例题讲解</div>
+        ${chapter.content.examples.map(e => `<div class="example-box"><h5>${e.title}</h5><p><strong>题目</strong>：${e.question}</p><p><strong>解答</strong>：${e.answer}</p></div>`).join('')}
+        
+        <div class="section-title">✏️ 课堂练习</div>
+        <div class="practice-section">${renderPracticeQuestions(chapterId)}</div>
+        
+        <div class="section-title">🏭 产教融合案例</div>
+        <div class="content-block"><h4>${chapter.content.industryCases[0].title}</h4><p>${chapter.content.industryCases[0].content}</p></div>
+        
+        <button class="btn-primary" onclick="startHomework(${chapterId})" style="margin-top: 20px;"><i class="fas fa-edit"></i> 开始课后作业</button>
+    </div>`;
+    
+    document.getElementById('chapterModalContent').innerHTML = content;
+    document.getElementById('chapterModal').classList.add('active');
+    
+    if (currentStudent) {
+        saveLearningProgress({ studentId: currentStudent.id, chapterId: chapterId, progress: 50, completed: false, lastAccess: new Date().toISOString() });
+    }
+}
+
+function renderPracticeQuestions(chapterId) {
+    const questions = chapterQuestions[chapterId]?.practice || [];
+    if (questions.length === 0) return '<p>暂无练习题</p>';
+    return questions.map((q, i) => `<div class="question-item">
+        <div class="question-text">${i + 1}. ${q.question}</div>
+        <div class="question-options">${q.options.map(opt => `<label class="option-item" onclick="selectOption(this, ${chapterId}, ${i})"><input type="radio" name="q${chapterId}_${i}" value="${opt.charAt(0)}">${opt}</label>`).join('')}</div>
+    </div>`).join('');
+}
+
+function selectOption(element, chapterId, questionIndex) {
+    const options = element.parentElement.querySelectorAll('.option-item');
+    options.forEach(opt => opt.classList.remove('selected'));
+    element.classList.add('selected');
+    
+    const questions = chapterQuestions[chapterId]?.practice || [];
+    const selectedAnswer = element.querySelector('input').value;
+    const correctAnswer = questions[questionIndex]?.answer;
+    
+    setTimeout(() => {
+        if (selectedAnswer === correctAnswer) {
+            element.style.background = 'rgba(16, 185, 129, 0.2)';
+            element.style.borderColor = '#10b981';
+        } else {
+            element.style.background = 'rgba(239, 68, 68, 0.2)';
+            element.style.borderColor = '#ef4444';
+        }
+    }, 300);
+}
+
+function closeChapterModal() {
+    document.getElementById('chapterModal').classList.remove('active');
+}
+
+function startHomework(chapterId) {
+    if (!currentStudent) { alert('请先登录后再做作业'); showLoginModal(); return; }
+    closeChapterModal();
+    currentChapterId = chapterId;
+    showHomeworkModal(chapterId);
+}
+
+function showHomeworkModal(chapterId) {
+    const chapter = courseChapters.find(c => c.id === chapterId);
+    const questions = chapterQuestions[chapterId]?.homework || [];
+    
+    document.getElementById('homeworkTitle').textContent = `第${chapter.id}章 ${chapter.title} - 课后作业`;
+    
+    let content = `<div class="homework-content">
+        <p style="margin-bottom: 16px; color: #6b7280;">共 ${questions.length} 道题，请认真完成每道题目。</p>
+        ${questions.map((q, i) => `<div class="homework-question">
+            <div class="q-num">第 ${i + 1} 题</div>
+            <div class="q-text">${q.question}</div>
+            <textarea id="answer_${i}" placeholder="请在此输入你的答案..." rows="3"></textarea>
+        </div>`).join('')}
+        <button class="submit-btn" onclick="submitHomework(${chapterId})"><i class="fas fa-paper-plane"></i> 提交作业</button>
+    </div>`;
+    
+    document.getElementById('homeworkContent').innerHTML = content;
+    document.getElementById('homeworkModal').classList.add('active');
+}
+
+function closeHomeworkModal() {
+    document.getElementById('homeworkModal').classList.remove('active');
+}
+
+async function submitHomework(chapterId) {
+    if (!currentStudent) { alert('请先登录'); return; }
+    
+    const questions = chapterQuestions[chapterId]?.homework || [];
+    const answers = [];
+    questions.forEach((q, i) => {
+        answers.push({ questionIndex: i, question: q.question, answer: document.getElementById(`answer_${i}`).value.trim() });
+    });
+    
+    const submission = {
+        studentId: currentStudent.id,
+        studentName: currentStudent.name,
+        className: currentStudent.className,
+        chapterId: chapterId,
+        answers: answers,
+        submittedAt: new Date().toISOString()
+    };
+    
+    saveHomeworkSubmissionLocal(submission);
+    saveLearningProgressLocal({ studentId: currentStudent.id, chapterId: chapterId, progress: 100, completed: true, lastAccess: new Date().toISOString() });
+    
+    alert('作业提交成功！');
+    closeHomeworkModal();
+    updateUI();
+    renderChapterList();
+}
+
+function saveHomeworkSubmissionLocal(submission) {
+    let submissions = JSON.parse(localStorage.getItem('homework_submissions') || '[]');
+    const index = submissions.findIndex(s => s.studentId === submission.studentId && s.chapterId === submission.chapterId);
+    if (index >= 0) submissions[index] = submission;
+    else submissions.push(submission);
+    localStorage.setItem('homework_submissions', JSON.stringify(submissions));
+}
+
+function saveLearningProgressLocal(progress) {
+    let progressData = JSON.parse(localStorage.getItem('learning_progress') || '[]');
+    const index = progressData.findIndex(p => p.studentId === progress.studentId && p.chapterId === progress.chapterId);
+    if (index >= 0) progressData[index] = progress;
+    else progressData.push(progress);
+    localStorage.setItem('learning_progress', JSON.stringify(progressData));
+}
+
+function switchHomeworkTab(tab) {
+    currentHomeworkTab = tab;
+    document.querySelectorAll('.homework-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    renderHomeworkList();
+}
+
+function renderHomeworkList() {
+    const container = document.getElementById('homeworkList');
+    if (!container) return;
+    
+    if (!currentStudent) {
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-user-lock"></i><p>请先登录查看作业</p></div>`;
+        return;
+    }
+    
+    const submissions = JSON.parse(localStorage.getItem('homework_submissions') || '[]').filter(s => s.studentId === currentStudent.id);
+    let html = '';
+    
+    courseChapters.forEach(chapter => {
+        const submission = submissions.find(s => s.chapterId === chapter.id);
+        const isSubmitted = !!submission;
+        if (currentHomeworkTab === 'pending' && isSubmitted) return;
+        if (currentHomeworkTab === 'submitted' && !isSubmitted) return;
+        
+        html += `<div class="homework-item" onclick="showHomeworkModal(${chapter.id})">
+            <div class="homework-icon"><i class="fas fa-file-alt"></i></div>
+            <div class="homework-info">
+                <div class="homework-title">第${chapter.id}章 ${chapter.title}</div>
+                <div class="homework-meta">${isSubmitted ? `已提交于 ${new Date(submission.submittedAt).toLocaleString()}` : '待完成'}</div>
+            </div>
+            <button class="homework-action ${isSubmitted ? 'submitted' : ''}">${isSubmitted ? '查看' : '去完成'}</button>
+        </div>`;
+    });
+    
+    if (!html) html = `<div class="empty-state"><i class="fas fa-check-circle"></i><p>${currentHomeworkTab === 'pending' ? '没有待完成的作业' : '没有已提交的作业'}</p></div>`;
+    container.innerHTML = html;
+}
+
+function renderProgressPage() {
+    const overview = document.getElementById('progressOverview');
+    const chart = document.getElementById('learningChart');
+    const status = document.getElementById('homeworkStatus');
+    
+    if (!currentStudent) {
+        overview.innerHTML = `<div class="empty-state" style="grid-column: span 2;"><i class="fas fa-user-lock"></i><p>请先登录查看学情分析</p></div>`;
+        chart.innerHTML = '';
+        status.innerHTML = '';
+        return;
+    }
+    
+    const progress = JSON.parse(localStorage.getItem('learning_progress') || '[]').filter(p => p.studentId === currentStudent.id);
+    const submissions = JSON.parse(localStorage.getItem('homework_submissions') || '[]').filter(s => s.studentId === currentStudent.id);
+    
+    const completedChapters = progress.filter(p => p.completed).length;
+    const totalChapters = courseChapters.length;
+    const progressPercent = Math.round((completedChapters / totalChapters) * 100);
+    
+    overview.innerHTML = `
+        <div class="progress-card"><h3>学习进度</h3><div class="value">${progressPercent}%</div></div>
+        <div class="progress-card"><h3>已完成章节</h3><div class="value">${completedChapters}/${totalChapters}</div></div>
+        <div class="progress-card"><h3>作业提交</h3><div class="value">${submissions.length}/${totalChapters}</div></div>
+        <div class="progress-card"><h3>综合评分</h3><div class="value">${calculateScore(progress, submissions)}</div></div>`;
+    
+    chart.innerHTML = `<div class="progress-bar-container">
+        <div class="progress-bar-label"><span>总体学习进度</span><span>${progressPercent}%</span></div>
+        <div class="progress-bar"><div class="progress-bar-fill" style="width: ${progressPercent}%"></div></div>
+    </div>`;
+    
+    status.innerHTML = `<h3>作业完成情况</h3>
+        <div class="status-list">${courseChapters.map(chapter => {
+            const submitted = submissions.find(s => s.chapterId === chapter.id);
+            return `<div class="status-item">
+                <span class="chapter-name">第${chapter.id}章 ${chapter.title}</span>
+                <span class="status-badge ${submitted ? 'completed' : 'pending'}">${submitted ? '已提交' : '未提交'}</span>
+            </div>`;
+        }).join('')}</div>`;
+}
+
+function calculateScore(progress, submissions) {
+    if (!currentStudent) return '--';
+    return Math.min(progress.filter(p => p.completed).length * 5 + submissions.length * 10, 100);
+}
+
+function updateUI() {
+    if (currentStudent) {
+        const progress = JSON.parse(localStorage.getItem('learning_progress') || '[]').filter(p => p.studentId === currentStudent.id);
+        const submissions = JSON.parse(localStorage.getItem('homework_submissions') || '[]').filter(s => s.studentId === currentStudent.id);
+        document.getElementById('completedCount').textContent = progress.filter(p => p.completed).length;
+        document.getElementById('homeworkCount').textContent = courseChapters.length - submissions.length;
+        document.getElementById('scoreCount').textContent = calculateScore(progress, submissions);
+    } else {
+        document.getElementById('completedCount').textContent = '0';
+        document.getElementById('homeworkCount').textContent = courseChapters.length;
+        document.getElementById('scoreCount').textContent = '--';
+    }
+}
+
+function handleChatKeypress(event) {
+    if (event.key === 'Enter') sendChatMessage();
+}
+
+function sendChatMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if (!message) return;
+    addMessage(message, 'user');
+    input.value = '';
+    setTimeout(() => addMessage(getAIResponse(message), 'assistant'), 500);
+}
+
+function getAIResponse(question) {
+    const lowerQuestion = question.toLowerCase();
+    for (const [keyword, info] of Object.entries(aiKnowledgeBase)) {
+        if (lowerQuestion.includes(keyword.toLowerCase())) {
+            return `${keyword}\n\n定义：${info.definition}\n\n分类：${info.types.join('、')}\n\n应用：${info.application}`;
+        }
+    }
+    if (lowerQuestion.includes('你好') || lowerQuestion.includes('您好')) return '你好！我是AI助教，有什么关于公差配合与测量技术的问题可以问我。';
+    return '这是一个很好的问题！建议你先复习相关章节的内容，然后结合实际案例进行理解。你可以尝试提出更具体的问题。';
+}
+
+function addMessage(content, type) {
+    const container = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.innerHTML = `<div class="message-content">${content.replace(/\n/g, '<br>')}</div>`;
+    container.appendChild(messageDiv);
+    container.scrollTop = container.scrollHeight;
+}
+
+function aiFunction(func) {
+    let response = '';
+    switch (func) {
+        case 'qa': response = '智能问答模式已开启\n\n请输入你关于公差配合与测量技术的问题，我会根据课程知识库为你解答。'; break;
+        case 'summary': response = currentStudent ? generateChapterSummary(currentStudent.currentChapter || 1) : '请先登录后再使用智能总结功能。'; break;
+        case 'keypoints': response = currentStudent ? generateChapterKeyPoints(currentStudent.currentChapter || 1) : '请先登录后再使用章节要点功能。'; break;
+        case 'analysis': response = currentStudent ? generateLearningAnalysis(currentStudent.id) : '请先登录后再使用学情分析功能。'; break;
+        case 'cases': response = generateIndustryCase(); break;
+        case 'progress': response = currentStudent ? generateProgressReport(currentStudent.id) : '请先登录后再查看学习进度。'; break;
+        default: response = '功能开发中，敬请期待！';
+    }
+    addMessage(response, 'assistant');
+}
+
+function generateChapterSummary(chapterId) {
+    const chapter = courseChapters.find(c => c.id === chapterId);
+    if (!chapter) return '未找到该章节信息。';
+    return `第${chapter.id}章 ${chapter.title} 总结\n\n主要内容：${chapter.description}\n\n学习要点：${chapter.content.keyPoints.map(p => p.title).join('、')}`;
+}
+
+function generateChapterKeyPoints(chapterId) {
+    const chapter = courseChapters.find(c => c.id === chapterId);
+    if (!chapter) return '未找到该章节信息。';
+    return `第${chapter.id}章 ${chapter.title} 知识要点\n\n重点内容：\n${chapter.content.keyPoints.map((p, i) => `${i + 1}. ${p.title}：${p.content}`).join('\n')}`;
+}
+
+function generateLearningAnalysis(studentId) {
+    const progress = JSON.parse(localStorage.getItem('learning_progress') || '[]').filter(p => p.studentId === studentId);
+    const submissions = JSON.parse(localStorage.getItem('homework_submissions') || '[]').filter(s => s.studentId === studentId);
+    const completedChapters = progress.filter(p => p.completed).length;
+    return `学情分析报告\n\n学习进度：${completedChapters}/${courseChapters.length} 章节\n作业提交：${submissions.length} 次\n\n建议：继续努力学习，按时完成作业。`;
+}
+
+function generateIndustryCase() {
+    const chapter = courseChapters[Math.floor(Math.random() * courseChapters.length)];
+    return `产教融合案例：${chapter.content.industryCases[0].title}\n\n${chapter.content.industryCases[0].content}`;
+}
+
+function generateProgressReport(studentId) {
+    const progress = JSON.parse(localStorage.getItem('learning_progress') || '[]').filter(p => p.studentId === studentId);
+    const submissions = JSON.parse(localStorage.getItem('homework_submissions') || '[]').filter(s => s.studentId === studentId);
+    let report = `学习进度报告\n\n更新时间：${new Date().toLocaleDateString()}\n\n`;
+    courseChapters.forEach(chapter => {
+        const chapterProgress = progress.find(p => p.chapterId === chapter.id);
+        const chapterSubmission = submissions.find(s => s.chapterId === chapter.id);
+        report += `第${chapter.id}章：学习${chapterProgress?.completed ? '已完成' : '进行中'} | 作业${chapterSubmission ? '已提交' : '未提交'}\n`;
+    });
+    return report;
+}
+
+window.addEventListener('click', function(event) {
+    if (event.target.classList.contains('modal')) event.target.classList.remove('active');
+});
+</script>
+</body>
+</html>
